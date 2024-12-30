@@ -16,8 +16,15 @@ import { createCreateMetadataAccountV3Instruction } from "@metaplex-foundation/m
 
 async function main() {
   const cluster = process.env.SOLANA_CLUSTER! as Cluster;
-
+  const name = process.env.TOKEN_MINT_NAME;
+  const symbol = process.env.TOKEN_MINT_SYMBOL;
+  const uri = process.env.TOKEN_METADATA_URI;
+  const tokenMintAddress = process.env.TOKEN_MINT;
   const user = getKeypairFromEnvironment("SECRET_KEY");
+
+  if (!cluster || !name || !symbol || !uri || !tokenMintAddress || !user) {
+    throw new Error("Missing required environment variables");
+  }
 
   const connection = new Connection(clusterApiUrl(cluster));
 
@@ -30,13 +37,12 @@ async function main() {
   );
 
   // Substitute in your token mint account
-  const tokenMintAccount = new PublicKey(process.env.TOKEN_MINT!);
+  const tokenMintAccount = new PublicKey(tokenMintAddress);
 
   const metadataData = {
-    name: "Solana Training Token",
-    symbol: "TRAINING",
-    // Arweave / IPFS / Pinata etc link using metaplex standard for offchain data
-    uri: process.env.TOKEN_METADATA_URI!,
+    name,
+    symbol,
+    uri,
     sellerFeeBasisPoints: 0,
     creators: null,
     collection: null,

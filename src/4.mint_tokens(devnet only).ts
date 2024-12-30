@@ -8,21 +8,31 @@ import { Cluster, Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 
 async function main() {
   const cluster = process.env.SOLANA_CLUSTER! as Cluster;
+  const tokenMintDecimals = process.env.TOKEN_MINT_DECIMALS;
+  const tokenMintAddress = process.env.TOKEN_MINT;
+  const tokenAccountAddress = process.env.TOKEN_ACCOUNT;
+
+  if (
+    !cluster ||
+    !tokenMintDecimals ||
+    !tokenMintAddress ||
+    !tokenAccountAddress
+  ) {
+    throw new Error("Missing required environment variables");
+  }
 
   const connection = new Connection(clusterApiUrl(cluster));
+  const decimals = parseInt(tokenMintDecimals);
 
   // Our token has two decimal places
-  const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 6);
+  const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, decimals);
 
   const user = getKeypairFromEnvironment("SECRET_KEY");
 
-  // Substitute in your token mint account from create-token-mint.ts
-  const tokenMintAccount = new PublicKey(process.env.TOKEN_MINT!);
+  const tokenMintAccount = new PublicKey(tokenMintAddress);
 
   // Substitute in your own, or a friend's token account address, based on the previous step.
-  const recipientAssociatedTokenAccount = new PublicKey(
-    process.env.TOKEN_ACCOUNT!
-  );
+  const recipientAssociatedTokenAccount = new PublicKey(tokenAccountAddress);
 
   const transactionSignature = await mintTo(
     connection,
