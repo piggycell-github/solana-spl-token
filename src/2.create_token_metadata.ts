@@ -33,7 +33,7 @@ async function main() {
     name: "Solana Training Token",
     symbol: "TRAINING",
     // Arweave / IPFS / Pinata etc link using metaplex standard for offchain data
-    uri: "https://arweave.net/1234",
+    uri: process.env.TOKEN_METADATA_URI!,
     sellerFeeBasisPoints: 0,
     creators: null,
     collection: null,

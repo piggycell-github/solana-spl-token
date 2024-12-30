@@ -19,7 +19,7 @@ async function main() {
   // SystemProgram.createAccount()
   // token.createInitializeMintInstruction()
   // See https://www.soldev.app/course/token-program
-  const tokenMint = await createMint(connection, user, user.publicKey, null, 2);
+  const tokenMint = await createMint(connection, user, user.publicKey, null, 6);
 
   const link = getExplorerLink("address", tokenMint.toString(), "devnet");
 
