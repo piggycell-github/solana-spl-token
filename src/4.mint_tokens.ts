@@ -4,10 +4,12 @@ import {
   getExplorerLink,
   getKeypairFromEnvironment,
 } from "@solana-developers/helpers";
-import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
+import { Cluster, Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 
 async function main() {
-  const connection = new Connection(clusterApiUrl("devnet"));
+  const cluster = process.env.SOLANA_CLUSTER! as Cluster;
+
+  const connection = new Connection(clusterApiUrl(cluster));
 
   // Our token has two decimal places
   const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 6);
@@ -31,7 +33,7 @@ async function main() {
     10 * MINOR_UNITS_PER_MAJOR_UNITS
   );
 
-  const link = getExplorerLink("transaction", transactionSignature, "devnet");
+  const link = getExplorerLink("transaction", transactionSignature, cluster);
 
   console.log(`✅ Success! Mint Token Transaction: ${link}`);
 }

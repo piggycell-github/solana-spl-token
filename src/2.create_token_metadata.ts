@@ -10,13 +10,16 @@ import {
   PublicKey,
   Transaction,
   sendAndConfirmTransaction,
+  Cluster,
 } from "@solana/web3.js";
 import { createCreateMetadataAccountV3Instruction } from "@metaplex-foundation/mpl-token-metadata";
 
 async function main() {
+  const cluster = process.env.SOLANA_CLUSTER! as Cluster;
+
   const user = getKeypairFromEnvironment("SECRET_KEY");
 
-  const connection = new Connection(clusterApiUrl("devnet"));
+  const connection = new Connection(clusterApiUrl(cluster));
 
   console.log(
     `🔑 We've loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`
@@ -82,7 +85,7 @@ async function main() {
   const transactionLink = getExplorerLink(
     "transaction",
     transactionSignature,
-    "devnet"
+    cluster
   );
 
   console.log(`✅ Transaction confirmed, explorer link is: ${transactionLink}`);
@@ -90,7 +93,7 @@ async function main() {
   const tokenMintLink = getExplorerLink(
     "address",
     tokenMintAccount.toString(),
-    "devnet"
+    cluster
   );
 
   console.log(`✅ Look at the token mint again: ${tokenMintLink}`);

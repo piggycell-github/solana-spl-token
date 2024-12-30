@@ -4,10 +4,12 @@ import {
   getExplorerLink,
   getKeypairFromEnvironment,
 } from "@solana-developers/helpers";
-import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
+import { Cluster, Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 
 async function main() {
-  const connection = new Connection(clusterApiUrl("devnet"));
+  const cluster = process.env.SOLANA_CLUSTER! as Cluster;
+
+  const connection = new Connection(clusterApiUrl(cluster));
 
   const user = getKeypairFromEnvironment("SECRET_KEY");
 
@@ -18,9 +20,6 @@ async function main() {
   // Substitute in your token mint account from create-token-mint.ts
   const tokenMintAccount = new PublicKey(process.env.TOKEN_MINT!);
 
-  // Here we are making an associated token account for our own address, but we can
-  // make an ATA on any other wallet in devnet!
-  // const recipient = new PublicKey("SOMEONE_ELSES_DEVNET_ADDRESS");
   const recipient = user.publicKey;
 
   const tokenAccount = await getOrCreateAssociatedTokenAccount(
@@ -35,7 +34,7 @@ async function main() {
   const link = getExplorerLink(
     "address",
     tokenAccount.address.toBase58(),
-    "devnet"
+    cluster
   );
 
   console.log(`✅ Created token Account: ${link}`);
